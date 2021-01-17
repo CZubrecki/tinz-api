@@ -19,3 +19,9 @@ export class SuccessSignUpDTO {
     @IsString()
     email: string;
 }
+
+export class ResetPasswordDTO {
+    @IsEmail()
+    @IsString()
+    email: string;
+}
