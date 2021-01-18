@@ -15,13 +15,4 @@ export class AuthController {
         return this.authService.registerUser(registerRequest);
     }
 
-    @Post('login')
-    async login(@Body() authenticateRequest: { email: string; password: string }) {
-        // try {
-        //     return await this.authService.authenticateUser(authenticateRequest);
-        // } catch (e) {
-        //     throw new BadRequestException(e.message);
-        // }
-    }
-
 }
