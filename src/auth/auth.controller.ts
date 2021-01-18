@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ResetPasswordDTO, SignUpDTO } from 'src/dtos/auth.dto';
+import { RegisterUserDTO } from '../dtos/auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -8,22 +8,20 @@ export class AuthController {
         private authService: AuthService,
     ) { }
 
-    @Post('/sign-in')
-    private async signIn() {
-
-    }
-
-    @Post('/sign-up')
-    private async signUp(
-        @Body() signUpDTO: SignUpDTO,
+    @Post('register')
+    async register(
+        @Body() registerRequest: RegisterUserDTO,
     ): Promise<void> {
-        return this.authService.signUp(signUpDTO);
+        return this.authService.registerUser(registerRequest);
     }
 
-    @Post('/reset-password')
-    private async resetPassword(
-        @Body() resetPasswordDTO: ResetPasswordDTO,
-    ): Promise<string> {
-        return await this.authService.resetPassword(resetPasswordDTO);
+    @Post('login')
+    async login(@Body() authenticateRequest: { email: string; password: string }) {
+        // try {
+        //     return await this.authService.authenticateUser(authenticateRequest);
+        // } catch (e) {
+        //     throw new BadRequestException(e.message);
+        // }
     }
+
 }

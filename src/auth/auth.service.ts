@@ -1,70 +1,26 @@
-import { HttpService, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import { RegisterUserDTO } from 'src/dtos/auth.dto';
 import { Repository } from 'typeorm/repository/Repository';
-import { ResetPasswordDTO, SignUpDTO } from '../dtos/auth.dto';
 import { UserEntity } from '../entities/user.entity';
+import { AuthConfig } from './auth.config';
 
 @Injectable()
 export class AuthService {
-
+    private userPool: CognitoUserPool;
     constructor(
-        private httpService: HttpService,
+        @Inject('AuthConfig')
+        private readonly authConfig: AuthConfig,
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
-    ) { }
-
-    private get auth0Domain() {
-        return process.env.AUTH0_DOMAIN;
-    }
-
-    public async signIn() {
-
-    }
-
-    public async signUp(signUpDTO: SignUpDTO) {
-        const options = {
-            headers: { 'Content-type': 'application/json' }
-        };
-
-        const content = {
-            client_id: process.env.AUTH0_CLIENT_ID,
-            connection: process.env.AUTH0_CONNECTION,
-            email: signUpDTO.email,
-            password: signUpDTO.password,
-        };
-        await this.httpService.post(`${this.auth0Domain}/dbconnections/signup`, content, options).subscribe({
-            next: async (response) => {
-                if (response.data) {
-                    const data = response.data;
-                    if (data.email && data._id) {
-                        const userEntity = new UserEntity()
-                        userEntity._id = data._id;
-                        userEntity.email = data.email;
-                        await this.insertUser(userEntity);
-                    }
-                }
-            },
-            error: (err) => {
-                console.log(err);
-            }
+    ) {
+        this.userPool = new CognitoUserPool({
+            UserPoolId: this.authConfig.userPoolId,
+            ClientId: this.authConfig.clientId,
         });
     }
 
-    private async insertUser(user: UserEntity) {
-        await this.userRepository.insert(user);
+    public async registerUser(registerRequest: RegisterUserDTO) {
     }
-
-    public async resetPassword(resetPasswordRequest: ResetPasswordDTO) {
-        const options = {
-            headers: { 'Content-type': 'application/json' }
-        };
-        const content = {
-            client_id: process.env.AUTH0_CLIENT_ID,
-            connection: process.env.AUTH0_CONNECTION,
-            email: resetPasswordRequest.email,
-        };
-
-        return (await this.httpService.post(`${this.auth0Domain}/dbconnections/change_password`, content, options).toPromise()).data;
-    }
-
 }

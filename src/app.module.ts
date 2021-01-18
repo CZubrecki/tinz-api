@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { Connection } from 'typeorm/connection/Connection';
@@ -24,7 +25,10 @@ dotenv.config();
       logging: true,
       autoLoadEntities: true,
     }),
-    AuthModule
+    AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

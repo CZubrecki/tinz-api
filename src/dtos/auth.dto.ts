@@ -1,27 +1,13 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsDefined, IsEmail, IsString, MinLength } from 'class-validator';
 
-export class SignUpDTO {
+export class RegisterUserDTO {
+    @IsDefined()
     @IsEmail()
-    @IsString()
     @MinLength(4)
     email: string;
 
+    @IsDefined()
     @IsString()
     @MinLength(8)
     password: string;
-}
-
-export class SuccessSignUpDTO {
-    @IsString()
-    id: string;
-
-    @IsEmail()
-    @IsString()
-    email: string;
-}
-
-export class ResetPasswordDTO {
-    @IsEmail()
-    @IsString()
-    email: string;
 }
