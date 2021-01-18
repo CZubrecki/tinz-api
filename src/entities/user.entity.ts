@@ -1,8 +1,8 @@
-import { BaseEntity, Column, Entity } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
-    @Column({ unique: true })
+    @PrimaryColumn({ unique: true })
     id: number;
 
     @Column({ unique: true })
