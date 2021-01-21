@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool, ISignUpResult } from 'amazon-cognito-identity-js';
+import * as _ from 'lodash';
 import { Repository } from 'typeorm/repository/Repository';
-import { UserCredentialsDTO } from '../dtos/auth.dto';
+import { ResetPasswordDTO, UserCredentialsDTO } from '../dtos/auth.dto';
 import { UserEntity } from '../entities/user.entity';
 import { AuthConfig } from './auth.config';
 
@@ -52,11 +53,7 @@ export class AuthService {
             Username: email,
             Password: password,
         });
-        const userData = {
-            Username: email,
-            Pool: this.userPool,
-        };
-        const newUser = new CognitoUser(userData);
+        const newUser = this.getUser(email);
         return new Promise((resolve, reject) => {
             return newUser.authenticateUser(authenticationDetails, {
                 onSuccess: result => {
@@ -67,5 +64,45 @@ export class AuthService {
                 },
             });
         });
+    }
+
+    public async resetPassword({ email, verificationCode, newPassword }: ResetPasswordDTO) {
+        const newUser = this.getUser(email);
+        if (_.isNil(verificationCode)) {
+            await this.requestVerificationCode(newUser);
+        }
+
+        if (verificationCode && newPassword) {
+            await this.confirmPasswordChange(newUser, verificationCode, newPassword);
+        }
+    }
+
+    private async requestVerificationCode(newUser: CognitoUser) {
+        await newUser.forgotPassword({
+            onSuccess: result => {
+            },
+            onFailure: err => {
+                console.log(err.message || JSON.stringify(err));
+            }
+        });
+    }
+
+    private async confirmPasswordChange(newUser: CognitoUser, verificationCode: string, newPassword: string) {
+        await newUser.confirmPassword(verificationCode, newPassword, {
+            onSuccess: () => { },
+            onFailure: (err) => {
+                console.log(err.message || JSON.stringify(err));
+            }
+        });
+
+    }
+
+    private getUser(email: string) {
+        const userData = {
+            Username: email,
+            Pool: this.userPool,
+        };
+        const newUser = new CognitoUser(userData);
+        return newUser;
     }
 }

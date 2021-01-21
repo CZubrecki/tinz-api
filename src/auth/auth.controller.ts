@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { UserCredentialsDTO } from '../dtos/auth.dto';
+import { ResetPasswordDTO, UserCredentialsDTO } from '../dtos/auth.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -20,6 +20,13 @@ export class AuthController {
         @Body() credentials: UserCredentialsDTO,
     ): Promise<string> {
         return await this.authService.authenticate(credentials);
+    }
+
+    @Post('reset-password')
+    async resetPassword(
+        @Body() resetPasswordDTO: ResetPasswordDTO,
+    ) {
+        return await this.authService.resetPassword(resetPasswordDTO);
     }
 
 }
