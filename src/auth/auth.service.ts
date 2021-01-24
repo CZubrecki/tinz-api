@@ -10,6 +10,7 @@ import { AuthConfig } from './auth.config';
 @Injectable()
 export class AuthService {
     private userPool: CognitoUserPool;
+
     constructor(
         @Inject('AuthConfig')
         private readonly authConfig: AuthConfig,

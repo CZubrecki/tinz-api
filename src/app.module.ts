@@ -6,6 +6,7 @@ import { Connection } from 'typeorm/connection/Connection';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { ImagesModule } from './images/images.module';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ dotenv.config();
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ImagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
