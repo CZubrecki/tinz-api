@@ -16,10 +16,12 @@ export class ImagesController {
     @UseInterceptors(FilesInterceptor('image'))
     async uploadFile(
         @User() user: UserEntity,
-        @UploadedFiles() file
+        @UploadedFiles() files: any[],
     ) {
-        // console.log(user);
-        // return await this.imageService.fileupload(file[0]);
+        const file = files[0];
+        if (file) {
+            return await this.imageService.fileUpload(file, user);
+        }
     }
 
 }
