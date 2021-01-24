@@ -9,17 +9,23 @@ import { UserEntity } from '../entities/user.entity';
 @Injectable()
 export class ImagesService {
     AWS_S3_BUCKET_NAME: string;
-    S3: any;
+    S3: AWS.S3;
     MIME_TYPE = 'image/jpeg';
     AWS_REGION: string;
+    LAMDBA: AWS.Lambda;
 
     constructor(
         @InjectRepository(ScanEntity)
         private scanRepository: Repository<ScanEntity>,
     ) {
+        AWS.config.update({ region: process.env.COGNITO_REGION });
         this.AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
         this.AWS_REGION = process.env.COGNITO_REGION;
         this.S3 = new AWS.S3({
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        });
+        this.LAMDBA = new AWS.Lambda({
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         });
