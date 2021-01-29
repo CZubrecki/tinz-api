@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ScanEntity } from "./scan.entity";
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
@@ -7,4 +8,7 @@ export class UserEntity extends BaseEntity {
 
     @Column({ unique: true })
     email: string;
+
+    @OneToMany(type => ScanEntity, scan => scan.owner)
+    scans: ScanEntity[];
 }

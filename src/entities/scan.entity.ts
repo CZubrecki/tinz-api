@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { UserEntity } from "./user.entity";
 
 @Entity({ name: 'scans' })
 export class ScanEntity extends BaseEntity {
@@ -10,4 +11,10 @@ export class ScanEntity extends BaseEntity {
 
     @Column()
     path: string;
+
+    @CreateDateColumn({ type: "timestamp" })
+    createdAt: number;
+
+    @ManyToOne(type => UserEntity, user => user.scans)
+    owner: UserEntity;
 }

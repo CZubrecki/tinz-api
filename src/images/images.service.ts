@@ -41,15 +41,15 @@ export class ImagesService {
             Key: urlKey,
             ContentType: this.MIME_TYPE,
         };
-        const data = await this.S3.putObject(params).promise();
-
-        if (data) {
+        const scan = new ScanEntity();
+        if (process.env.ENV !== 'dev') {
+            await this.S3.putObject(params).promise();
             const path = `https://${this.AWS_S3_BUCKET_NAME}.s3.${this.AWS_REGION}.amazonaws.com/${urlKey}`;
-            const scan = new ScanEntity();
-            scan.ownerId = userId;
             scan.path = path;
-
-            await this.scanRepository.insert(scan);
+        } else {
+            scan.path = '';
         }
+        scan.ownerId = userId;
+        await this.scanRepository.insert(scan);
     }
 }
