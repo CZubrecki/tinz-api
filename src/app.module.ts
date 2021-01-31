@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ImagesModule } from './images/images.module';
+import { BreweryModule } from './brewery/brewery.module';
+import { BeerModule } from './beer/beer.module';
 
 dotenv.config();
 
@@ -31,6 +33,8 @@ dotenv.config();
       isGlobal: true,
     }),
     ImagesModule,
+    BreweryModule,
+    BeerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
