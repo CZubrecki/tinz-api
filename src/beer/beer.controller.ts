@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateBeerDTO, UpdateBeerDTO } from '../dtos/beer.dto';
 import { BeerEntity } from '../entities/beer.entity';
@@ -28,7 +28,7 @@ export class BeerController {
     @UseGuards(AuthGuard('jwt'))
     private async createBeer(
         @Body() createBeerRequest: CreateBeerDTO,
-    ) {
+    ): Promise<BeerEntity | HttpException> {
         return this.beerService.createBeer(createBeerRequest);
     }
 

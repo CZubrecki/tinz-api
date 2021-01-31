@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateBreweryDTO, UpdateBreweryDTO } from '../dtos/brewery.dto';
@@ -15,15 +15,24 @@ export class BreweryService {
         return await this.breweryRepository.find();
     }
 
-    public async getBrewery(): Promise<BreweryEntity> {
-        return await this.breweryRepository.findOne();
+    public async getAllBreweriesAndBeers(): Promise<BreweryEntity[]> {
+        return await this.breweryRepository.find({ relations: ['beers'] });
     }
 
-    public async createBrewery(createBreweryRequest: CreateBreweryDTO) {
-
+    public async getBrewery(id: string): Promise<BreweryEntity> {
+        return await this.breweryRepository.findOne({ id });
     }
 
-    public async updateBrewery(updateBreweryRequest: UpdateBreweryDTO) {
+    public async createBrewery(createBreweryRequest: CreateBreweryDTO): Promise<BreweryEntity | HttpException> {
+        try {
+            const insertResult = await this.breweryRepository.insert(createBreweryRequest);
+            const id = insertResult.identifiers[0].id;
+            return await this.breweryRepository.findOne({ id });
+        } catch (err) {
+            return new HttpException(err.message, 409);
+        }
+    }
 
+    public async updateBrewery(id: string, updateBreweryRequest: UpdateBreweryDTO) {
     }
 }

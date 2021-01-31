@@ -27,6 +27,9 @@ export class BeerEntity extends BaseEntity {
     @Column({ type: 'text', nullable: true })
     description: string;
 
+    @Column({ default: 0 })
+    rating: number;
+
     @ManyToOne(type => BreweryEntity, brewery => brewery.beers)
     brewery: BreweryEntity;
 }

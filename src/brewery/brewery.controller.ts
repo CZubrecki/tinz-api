@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateBreweryDTO, UpdateBreweryDTO } from '../dtos/brewery.dto';
 import { BreweryEntity } from '../entities/brewery.entity';
@@ -17,19 +17,26 @@ export class BreweryController {
         return this.breweryService.getBreweries();
     }
 
+    @Get('/beers')
+    @UseGuards(AuthGuard('jwt'))
+    private async getBreweriesAndBeers(
+    ): Promise<BreweryEntity[]> {
+        return this.breweryService.getAllBreweriesAndBeers();
+    }
+
     @Get('/:id')
     @UseGuards(AuthGuard('jwt'))
     private async getBrewery(
         @Param('id') id: string
     ): Promise<BreweryEntity> {
-        return this.breweryService.getBrewery();
+        return this.breweryService.getBrewery(id);
     }
 
     @Post('')
     @UseGuards(AuthGuard('jwt'))
     private async createBrewery(
         @Body() createBreweryRequest: CreateBreweryDTO,
-    ) {
+    ): Promise<BreweryEntity | HttpException> {
         return this.breweryService.createBrewery(createBreweryRequest);
     }
 
@@ -39,6 +46,6 @@ export class BreweryController {
         @Param('id') id: string,
         @Body() updateBreweryRequest: UpdateBreweryDTO,
     ) {
-        return this.breweryService.updateBrewery(updateBreweryRequest);
+        return this.breweryService.updateBrewery(id, updateBreweryRequest);
     }
 }
