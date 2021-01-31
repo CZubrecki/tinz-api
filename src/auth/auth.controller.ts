@@ -9,21 +9,21 @@ export class AuthController {
     ) { }
 
     @Post('register')
-    async register(
+    private async register(
         @Body() registerRequest: UserCredentialsDTO,
     ): Promise<void> {
         return this.authService.registerUser(registerRequest);
     }
 
     @Post('login')
-    async login(
+    private async login(
         @Body() credentials: UserCredentialsDTO,
     ): Promise<string> {
         return await this.authService.authenticate(credentials);
     }
 
     @Post('reset-password')
-    async resetPassword(
+    private async resetPassword(
         @Body() resetPasswordDTO: ResetPasswordDTO,
     ) {
         return await this.authService.resetPassword(resetPasswordDTO);

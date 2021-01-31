@@ -14,7 +14,7 @@ export class ImagesController {
     @Post('process')
     @UseGuards(AuthGuard('jwt'))
     @UseInterceptors(FilesInterceptor('image'))
-    async uploadFile(
+    private async uploadFile(
         @User() user: UserEntity,
         @UploadedFiles() files: any[],
     ) {

@@ -12,33 +12,33 @@ export class BreweryController {
 
     @Get('')
     @UseGuards(AuthGuard('jwt'))
-    async getBreweries(
+    private async getBreweries(
     ): Promise<BreweryEntity[]> {
-        return [];
+        return this.breweryService.getBreweries();
     }
 
     @Get('/:id')
     @UseGuards(AuthGuard('jwt'))
-    async getBrewery(
+    private async getBrewery(
         @Param('id') id: string
     ): Promise<BreweryEntity> {
-        return null;
+        return this.breweryService.getBrewery();
     }
 
     @Post('')
     @UseGuards(AuthGuard('jwt'))
-    async createBrewery(
+    private async createBrewery(
         @Body() createBreweryRequest: CreateBreweryDTO,
     ) {
-
+        return this.breweryService.createBrewery(createBreweryRequest);
     }
 
     @Put('/:id')
     @UseGuards(AuthGuard('jwt'))
-    async updateBrewery(
+    private async updateBrewery(
         @Param('id') id: string,
         @Body() updateBreweryRequest: UpdateBreweryDTO,
     ) {
-
+        return this.breweryService.updateBrewery(updateBreweryRequest);
     }
 }

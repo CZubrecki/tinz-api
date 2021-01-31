@@ -12,32 +12,32 @@ export class BeerController {
 
     @Get('')
     @UseGuards(AuthGuard('jwt'))
-    async getBeers(): Promise<BeerEntity[]> {
-        return [];
+    private async getBeers(): Promise<BeerEntity[]> {
+        return this.beerService.getBeers();
     }
 
     @Get('/:id')
     @UseGuards(AuthGuard('jwt'))
-    async getBeer(
+    private async getBeer(
         @Param('id') id: string
     ): Promise<BeerEntity> {
-        return null;
+        return this.beerService.getBeer();
     }
 
     @Post('')
     @UseGuards(AuthGuard('jwt'))
-    async createBeer(
+    private async createBeer(
         @Body() createBeerRequest: CreateBeerDTO,
     ) {
-
+        return this.beerService.createBeer(createBeerRequest);
     }
 
     @Put('/:id')
     @UseGuards(AuthGuard('jwt'))
-    async updateBeer(
+    private async updateBeer(
         @Param('id') id: string,
         @Body() updateBeerRequest: UpdateBeerDTO,
     ) {
-
+        return this.beerService.updateBeer(updateBeerRequest);
     }
 }
