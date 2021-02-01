@@ -1,4 +1,9 @@
+import { Transform } from "class-transformer";
 import { IsDefined, IsNumber, IsOptional, IsString } from "class-validator";
+
+const transformStringToNumber = input => {
+    return Number(input.value);
+}
 
 export class CreateBeerDTO {
     @IsDefined()
@@ -19,15 +24,20 @@ export class CreateBeerDTO {
 
     @IsDefined()
     @IsNumber()
+    @Transform(transformStringToNumber, { toClassOnly: true })
     abv: number;
 
     @IsDefined()
     @IsNumber()
+    @Transform(transformStringToNumber, { toClassOnly: true })
     ibu: number;
 
     @IsOptional()
     @IsDefined()
     description: string;
+
+    @IsOptional()
+    image: any;
 }
 
 export class UpdateBeerDTO {

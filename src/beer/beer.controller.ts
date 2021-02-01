@@ -1,5 +1,6 @@
-import { Body, Controller, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateBeerDTO, UpdateBeerDTO } from '../dtos/beer.dto';
 import { BeerEntity } from '../entities/beer.entity';
 import { BeerService } from './beer.service';
@@ -25,9 +26,12 @@ export class BeerController {
     }
 
     @Post('')
+    @UsePipes(new ValidationPipe({ transform: true }))
     @UseGuards(AuthGuard('jwt'))
+    @UseInterceptors(FileInterceptor('image'))
     private async createBeer(
         @Body() createBeerRequest: CreateBeerDTO,
+        @UploadedFile() image: any,
     ): Promise<BeerEntity | HttpException> {
         return this.beerService.createBeer(createBeerRequest);
     }
