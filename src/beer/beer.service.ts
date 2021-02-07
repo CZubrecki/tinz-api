@@ -21,6 +21,10 @@ export class BeerService {
         return await this.beerRepository.findOne();
     }
 
+    public async getBeersAndBreweries(): Promise<BeerEntity[]> {
+        return await this.beerRepository.find({ relations: ['brewery'] });;
+    }
+
     public async createBeer(createBeerRequest: CreateBeerDTO): Promise<BeerEntity | HttpException> {
         try {
             const insertResult = await this.beerRepository.insert(createBeerRequest);

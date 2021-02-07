@@ -17,6 +17,15 @@ export class BeerController {
         return this.beerService.getBeers();
     }
 
+    @Get('/beers-and-breweries')
+    @UseGuards(AuthGuard('jwt'))
+    private async getBeersAndBreweries(
+        @Param('id') id: string
+    ): Promise<BeerEntity[]> {
+        return this.beerService.getBeersAndBreweries();
+    }
+
+
     @Get('/:id')
     @UseGuards(AuthGuard('jwt'))
     private async getBeer(
